@@ -11,23 +11,6 @@ class LoginRequest extends FormRequest
         return true;
     }
 
-    // public function rules()
-    // {
-    //     // Jika endpoint adalah login user (mobile)
-    //     if ($this->is('api/login')) {
-    //         return [
-    //             'username' => 'required|string|min:10', // Contoh aturan validasi untuk username
-    //             'password' => 'required|min:6', // Contoh aturan validasi untuk password
-    //         ];
-    //     }
-    //     // Jika endpoint adalah login admin
-    //     elseif ($this->is('api/login-admin')) {
-    //         return [
-    //             'email' => 'required|string|email', // Aturan validasi untuk email admin
-    //             'password' => 'required|min:6', // Aturan validasi untuk password admin
-    //         ];
-    //     }
-    // }
     public function rules()
     {
         return [

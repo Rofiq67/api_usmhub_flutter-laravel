@@ -35,13 +35,13 @@ class AduanController extends Controller
         $photoPath = null;
         if ($request->hasFile('bukti_photo')) {
             $photoPath = $request->file('bukti_photo')->store('photos', 'public');
-            // Simpan hanya nama file ke dalam database, tanpa 'photos/' di depannya
+            // , tanpa 'photos/' di depannya
             $photoPath = basename($photoPath);
         }
 
 
         $pengaduan = Aduan::create([
-            'user_id' => $user->id, // Set user_id berdasarkan pengguna yang sedang login
+            'user_id' => $user->id, //
             'jenis_pengaduan' => $request->jenis_pengaduan,
             'program_studi' => $request->program_studi,
             'keterangan' => $request->keterangan,

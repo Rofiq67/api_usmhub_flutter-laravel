@@ -18,12 +18,23 @@ class AuthController extends Controller
         // register user mobile
         $request->validated();
 
+        $fileName = null;
+        if ($request->hasFile('img_profile')) {
+            $file = $request->file('img_profile');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('public/photos', $fileName);
+        }
+
         $userData = [
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'username' => $request->username,
+            'img_profile' => $fileName,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'tgl_lahir' => $request->tgl_lahir,
+            'progdi' => $request->progdi,
+            'gender' => $request->gender,
         ];
 
         $user = User::create($userData);

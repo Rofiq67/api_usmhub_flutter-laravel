@@ -25,8 +25,12 @@ class RegisterRequest extends FormRequest
             'first_name' => 'required|min:3',
             'last_name' => 'required|min:3',
             'username' => 'required|string|min:10|unique:users',
+            'img_profile' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
+            'progdi' => 'required|in:Teknik Informatika,Sistem Informasi,Ilmu Komunikasi,Pariwisata',
+            'tgl_lahir' => 'required|date',
+            'gender' => 'required|in:Laki-laki,Perempuan',
         ];
     }
 }
