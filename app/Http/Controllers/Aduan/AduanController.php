@@ -18,9 +18,7 @@ class AduanController extends Controller
 
         return response()->json($riwayat, 200);
     }
-    /**
-     * Menambahkan pengaduan baru.
-     */
+
     public function createPengaduan(AduanRequest $request)
     {
         $user = Auth::user(); // Mendapatkan pengguna yang sedang login
@@ -28,15 +26,13 @@ class AduanController extends Controller
             return response()->json(['message' => 'User not authenticated'], 401);
         }
 
-        // $photoPath = null;
-        // if ($request->hasFile('bukti_photo')) {
-        //     $photoPath = $request->file('bukti_photo')->store('photos', 'public');
-        // }
         $photoPath = null;
         if ($request->hasFile('bukti_photo')) {
-            $photoPath = $request->file('bukti_photo')->store('photos', 'public');
-            // , tanpa 'photos/' di depannya
-            $photoPath = basename($photoPath);
+            $photo = $request->file('bukti_photo');
+            $photoPath = $photo->store('photos', 'public');
+            $photoPath = $photo->getClientOriginalName(); // Mengambil nama file asli tanpa path
+            $photoPath = asset($photoPath); // Mengubahpath menjadi URL
+            // $photoPath = asset('storage/' . $photoPath);
         }
 
 
@@ -47,18 +43,13 @@ class AduanController extends Controller
             'keterangan' => $request->keterangan,
             'rating' => $request->rating,
             'bukti_photo' => $photoPath,
+            'status' => 'Belum Dibaca', // Default status
         ]);
 
         return response()->json([
             'message' => 'Pengaduan berhasil dibuat',
-            'pengaduan' => $pengaduan
+            'pengaduan' => $pengaduan,
+            'bukti_photo' => $photoPath,
         ], 201);
-    }
-
-
-
-    public function view()
-    {
-        return view('pengaduan.view');
     }
 }

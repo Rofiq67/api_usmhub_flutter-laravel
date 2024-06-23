@@ -4,31 +4,22 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsersRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function updateProfile(UsersRequest $request)
+    public function getUserProfile()
     {
-        $user = Auth::user();
+        $user = Auth::user(); // Mendapatkan informasi pengguna yang sedang login
 
-        if ($request->hasFile('img_profile')) {
-            $file = $request->file('img_profile');
-            $path = $file->store('photos', 'public');
-            $user->img_profile = $path;
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        $user->progdi = $request->progdi;
-        $user->tgl_lahir = $request->tgl_lahir;
-        $user->gender = $request->gender;
-        $user->alamat = $request->alamat;
-
-        $user->save();
-
-        return response()->json([
-            'message' => 'Data berhasil di update',
-            'user' => $user,
-        ], 200);
+        return response()->json($user);
     }
 }

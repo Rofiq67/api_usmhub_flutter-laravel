@@ -6,20 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\FeedRequest;
 use Illuminate\Http\Request;
 use App\Models\Feed;
+use Illuminate\Support\Facades\Auth;
 
 class FeedController extends Controller
 {
-    //new feed
-    public function latest()
+    public function getAllFeeds()
     {
-        $feeds = Feed::where('uploaded', true)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $user = Auth::user();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Daftar Feed Terbaru',
-            'data' => $feeds
-        ]);
+        $feeds = Feed::all();
+        return response()->json(['feeds' => $feeds], 200);
+    }
+
+    // Metode untuk mendapatkan feed berdasarkan ID
+    public function getFeedById($id)
+    {
+        $feeds = Feed::findOrFail($id);
+        return response()->json(['feeds' => $feeds], 200);
     }
 }

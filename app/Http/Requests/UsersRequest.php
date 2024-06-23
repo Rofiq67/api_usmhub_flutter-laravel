@@ -17,11 +17,14 @@ class UsersRequest extends FormRequest
     public function rules()
     {
         return [
-            'progdi' => 'required|string|max:255',
-            'tgl_lahir' => 'required|date',
-            'gender' => 'required|string|in:male,female',
-            'alamat' => 'required|string|max:255',
-            'img_profile' => 'nullable|image|max:2048', // max 2MB
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users,username,' . $this->user()->id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $this->user()->id,
+            'img_profile' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            'tgl_lahir' => 'nullable|date',
+            'progdi' => 'nullable|string|in:Teknik Informatika,Sistem Informasi,Ilmu Komunikasi,Pariwisata',
+            'gender' => 'nullable|string|in:Laki-laki,Perempuan',
         ];
     }
 }

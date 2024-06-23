@@ -15,8 +15,10 @@ class Feed extends Model
         'kategori',
         'judul',
         'deskripsi',
-        'file_path',
+        'doc_feed',
+        'img_banner',
         'status',
+        // 'created_at'
     ];
 
     protected $casts = [

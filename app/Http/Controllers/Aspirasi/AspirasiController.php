@@ -19,6 +19,8 @@ class AspirasiController extends Controller
 
         return response()->json($riwayat, 200);
     }
+
+
     //
     public function createAspirasi(AspirasiRequest $request)
     {
@@ -42,14 +44,6 @@ class AspirasiController extends Controller
         ], 201);
     }
 
-    /**
-     * Mendapatkan daftar aspirasi.
-     */
-    public function listAspirasi()
-    {
-        $aspirasi = Aspirasi::all(); // Mengambil semua data aspirasi
-        return response()->json($aspirasi, 200); // Status HTTP 200 (OK)
-    }
 
     public function index()
     {

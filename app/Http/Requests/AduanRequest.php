@@ -19,6 +19,7 @@ class AduanRequest extends FormRequest
             'keterangan' => 'required|string',
             'rating' => 'nullable|integer|min:1|max:5', // Jika diperlukan
             'bukti_photo' => 'nullable|file|mimes:jpg,jpeg,png|max:2048', // Maksimum 2MB
+            
         ];
     }
 }
