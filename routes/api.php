@@ -34,6 +34,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // pengaduan
     Route::post('/pengaduan', [AduanController::class, 'createPengaduan'])->name('createPengaduan');
     Route::get('/listaduan', [AduanController::class, 'riwayatPengaduan']);
+    Route::get('/pengaduan/{id}/forward', [AduanController::class, 'getHistoryForward'])->name('pengaduan.forward');
+
     //comment
     // Route::get('/komentar', [KomentarController::class, 'index']);
     Route::post('/komentar/{aduan_id}/kirim', [KomentarController::class, 'kirimKomentar'])->name('komentar.kirim');
@@ -46,9 +48,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/listaspirasi', [AspirasiController::class, 'riwayatAspirasi']);
 
     // Feed
-    // Route::post('/feed/create', [FeedController::class, 'create'])->name('createFeed');
-    // Route::get('/feed/latest', [FeedController::class, 'latest']);
-    // Route::post('/feed', [FeedController::class, 'index']);
     Route::get('/feeds', [FeedController::class, 'getAllFeeds']);
     Route::get('/feed/view/{id}', [FeedController::class, 'getFeedById']);
 

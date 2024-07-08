@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Aduan;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AduanRequest;
 use App\Models\Aduan;
+use App\Models\HistoryForward;
 use Illuminate\Support\Facades\Auth;
 
 class AduanController extends Controller
@@ -51,5 +52,26 @@ class AduanController extends Controller
             'pengaduan' => $pengaduan,
             'bukti_photo' => $photoPath,
         ], 201);
+    }
+
+    public function getHistoryForward($id)
+    {
+        $user = Auth::user();
+
+        $pengaduan = Aduan::findOrFail($id);
+
+        if ($pengaduan->user_id !== $user->id) {
+            return response()->json(['message' => 'Anda tidak memiliki izin untuk melihat aduan ini.'], 403);
+        }
+
+        // Ambil riwayat penerusan aduan terbaru
+        $riwayatTerusan = HistoryForward::where('aduan_id', $pengaduan->id)
+            ->latest() // Mengambil data terbaru berdasarkan waktu
+            ->first(); // Mengambil hanya satu data terbaru
+
+        return response()->json([
+            'pengaduan' => $pengaduan,
+            'riwayat_terusan' => $riwayatTerusan
+        ], 200);
     }
 }

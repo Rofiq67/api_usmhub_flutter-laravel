@@ -14,14 +14,14 @@ class FeedController extends Controller
     {
         $user = Auth::user();
 
-        $feeds = Feed::all();
+        $feeds = Feed::with('user')->get(); // Include user information
         return response()->json(['feeds' => $feeds], 200);
     }
 
     // Metode untuk mendapatkan feed berdasarkan ID
     public function getFeedById($id)
     {
-        $feeds = Feed::findOrFail($id);
-        return response()->json(['feeds' => $feeds], 200);
+        $feed = Feed::with('user')->findOrFail($id); // Include user information
+        return response()->json(['feed' => $feed], 200);
     }
 }

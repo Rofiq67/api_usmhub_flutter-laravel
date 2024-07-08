@@ -20,6 +20,7 @@ class Aspriasi extends Model
         'program_studi',
         'keterangan',
         'rating',
+        'status'
     ];
     protected $hidden = [
         'created_at',

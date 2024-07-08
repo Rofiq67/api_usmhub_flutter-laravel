@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
+    /**D:\api_usmhub\database\migrations\2024_05_20_161328_add_datanew_users.php
      * Run the migrations.
      */
     public function up()

@@ -43,10 +43,4 @@ class AspirasiController extends Controller
             'aspirasi' => $aspirasi
         ], 201);
     }
-
-
-    public function index()
-    {
-        return view('aspirasi.index');
-    }
 }
