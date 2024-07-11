@@ -36,23 +36,26 @@ class AduanController extends Controller
             // $photoPath = asset('storage/' . $photoPath);
         }
 
+        // Ambil nilai is_anonymous dari request, default-nya false jika tidak ada
+        $isAnonymous = $request->has('is_anonymous') ? $request->is_anonymous : false;
 
         $pengaduan = Aduan::create([
-            'user_id' => $user->id, //
+            'user_id' => $user->id,
             'jenis_pengaduan' => $request->jenis_pengaduan,
             'program_studi' => $request->program_studi,
             'keterangan' => $request->keterangan,
             'rating' => $request->rating,
             'bukti_photo' => $photoPath,
-            'status' => 'Belum Dibaca', // Default status
+            'status' => 'Belum Dibaca',
+            'is_anonymous' => $isAnonymous,
         ]);
 
         return response()->json([
             'message' => 'Pengaduan berhasil dibuat',
             'pengaduan' => $pengaduan,
-            'bukti_photo' => $photoPath,
         ], 201);
     }
+
 
     public function getHistoryForward($id)
     {

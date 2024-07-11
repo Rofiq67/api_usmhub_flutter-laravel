@@ -23,9 +23,10 @@ class AspirasiRequest extends FormRequest
     {
         return [
             'jenis_aspirasi' => 'required|in:Fasilitas,Kebijakan,Pelayanan',
-            'program_studi' => 'required|in:Teknik Informatika,Sistem Informasi,Ilmu Komunikasi,Pariwisata',
+            'program_studi' => 'required|in:Dekan FTIK,Teknik Informatika,Sistem Informasi,Ilmu Komunikasi,Pariwisata',
             'keterangan' => 'required|string',
-            'rating' => 'nullable|integer|min:1|max:5', // Jika diperlukan
+            'rating' => 'nullable|integer|min:1|max:5',
+
         ];
     }
 }

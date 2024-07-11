@@ -29,6 +29,7 @@ class AspirasiController extends Controller
             return response()->json(['message' => 'User not authenticated'], 401);
         }
 
+        $isAnonymous = $request->has('is_anonymous') ? $request->is_anonymous : false;
 
         $aspirasi = Aspirasi::create([
             'user_id' => $user->id, // Set user_id berdasarkan pengguna yang sedang login
@@ -36,6 +37,7 @@ class AspirasiController extends Controller
             'program_studi' => $request->program_studi,
             'keterangan' => $request->keterangan,
             'rating' => $request->rating,
+            'is_anonymous' => $isAnonymous,
         ]);
 
         return response()->json([

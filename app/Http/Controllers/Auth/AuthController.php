@@ -145,4 +145,28 @@ class AuthController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
+
+    public function forgotPass(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'username' => 'required|string|exists:users,username',
+            'password_baru' => 'required|string|min:6|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+
+        $user = User::where('username', $request->username)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'Username tidak ditemukan'], 404);
+        }
+
+        // Update password
+        $user->password = Hash::make($request->password_baru);
+        $user->save();
+
+        return response()->json(['message' => "Kata sandi untuk username $user->username berhasil diganti"], 200);
+    }
 }

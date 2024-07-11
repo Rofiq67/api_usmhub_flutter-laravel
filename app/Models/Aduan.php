@@ -13,7 +13,7 @@ class Aduan extends Model
 
     protected $table = 'aduans';
 
-    // Atribut yang dapat diisi secara massal
+
     protected $fillable = [
         'user_id',
         'jenis_pengaduan',
@@ -21,7 +21,8 @@ class Aduan extends Model
         'keterangan',
         'rating',
         'bukti_photo',
-        'status'
+        'status',
+        'is_anonymous'
     ];
 
     // Atribut yang harus disembunyikan dalam JSON

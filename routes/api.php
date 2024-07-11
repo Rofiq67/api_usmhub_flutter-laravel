@@ -24,12 +24,12 @@ Route::controller('/', 'TestController');
 //api mobile
 Route::post('/loginApi', [AuthController::class, 'loginApi'])->name('loginApi');
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/forgot-password', [AuthController::class, 'forgotPass']);
 
 
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']); // Rute untuk proses logout user mobile
-
 
     // pengaduan
     Route::post('/pengaduan', [AduanController::class, 'createPengaduan'])->name('createPengaduan');

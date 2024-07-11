@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('komentar', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('aduan_id');
+            $table->unsignedInteger('aduan_id'); // Ubah dari unsignedBigInteger ke unsignedInteger
             $table->foreign('aduan_id')->references('id')->on('aduans')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');

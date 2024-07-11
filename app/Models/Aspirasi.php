@@ -20,6 +20,7 @@ class Aspirasi extends Model
         'program_studi',
         'keterangan',
         'rating',
+        'is_anonymous'
     ];
     protected $hidden = [
         'created_at',
