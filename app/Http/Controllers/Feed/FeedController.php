@@ -15,7 +15,9 @@ class FeedController extends Controller
         $user = Auth::user();
 
         $feeds = Feed::with('user')->get(); // Include user information
-        return response()->json(['feeds' => $feeds], 200);
+        return response()->json([
+            'feeds' => $feeds,
+        ], 200);
     }
 
     // Metode untuk mendapatkan feed berdasarkan ID

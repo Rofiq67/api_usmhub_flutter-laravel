@@ -23,8 +23,8 @@ class Aspirasi extends Model
         'is_anonymous'
     ];
     protected $hidden = [
-        'created_at',
-        'updated_at',
+        // 'created_at',
+        // 'updated_at',
     ];
 
     // Atribut yang dikasting (casted) ke tipe data tertentu

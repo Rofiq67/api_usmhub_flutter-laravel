@@ -27,8 +27,8 @@ class Aduan extends Model
 
     // Atribut yang harus disembunyikan dalam JSON
     protected $hidden = [
-        'created_at',
-        'updated_at',
+        // 'created_at',
+        // 'updated_at',
     ];
 
     // Atribut yang dikasting (casted) ke tipe data tertentu
