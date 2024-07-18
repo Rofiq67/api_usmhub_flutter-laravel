@@ -6,6 +6,7 @@ use App\Http\Controllers\Aspirasi\AspirasiController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Feed\FeedController;
+use App\Http\Controllers\GetFile\GetFileController;
 use App\Http\Controllers\Komentar\KomentarController as KomentarController;
 use App\Http\Controllers\User\UserController;
 use App\Models\Feed;
@@ -30,6 +31,11 @@ Route::post('/forgot-password', [AuthController::class, 'forgotPass']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']); // Rute untuk proses logout user mobile
+
+    //getFile
+    Route::get('/photos/{filename}', [GetFileController::class, 'getImage'])->name('getImage');
+    Route::get('/documents/{filedoc}', [GetFileController::class, 'getDoc'])->name('getDoc');
+    Route::get('/file_komentar/{filekomentar}', [GetFileController::class, 'getFileKomentar'])->name('getFileKomentar');
 
     // pengaduan
     Route::post('/pengaduan', [AduanController::class, 'createPengaduan'])->name('createPengaduan');

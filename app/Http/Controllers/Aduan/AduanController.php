@@ -27,14 +27,20 @@ class AduanController extends Controller
             return response()->json(['message' => 'User not authenticated'], 401);
         }
 
+        // $photoPath = null;
+        // if ($request->hasFile('bukti_photo')) {
+        //     $photo = $request->file('bukti_photo');
+        //     $photoPath = $photo->store('photos', 'public');
+        //     // $photoPath = $photo->getClientOriginalName(); // Mengambil nama file asli tanpa path
+        //     $photoPath = asset($photoPath); // Mengubahpath menjadi URL
+        //     // $photoPath = asset('storage/' . $photoPath);
+        // }
         $photoPath = null;
         if ($request->hasFile('bukti_photo')) {
             $photo = $request->file('bukti_photo');
             $photoPath = $photo->store('photos', 'public');
-            $photoPath = $photo->getClientOriginalName(); // Mengambil nama file asli tanpa path
-            $photoPath = asset($photoPath); // Mengubahpath menjadi URL
-            // $photoPath = asset('storage/' . $photoPath);
         }
+
 
         // Ambil nilai is_anonymous dari request, default-nya false jika tidak ada
         $isAnonymous = $request->has('is_anonymous') ? $request->is_anonymous : false;
