@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\UsersRequest;
+use Illuminate\Support\Facades\Http;
 
 class AuthController extends Controller
 {
@@ -74,37 +75,84 @@ class AuthController extends Controller
         ]);
     }
 
+    // public function updateProfile(UsersRequest $request)
+    // {
+    //     $user = Auth::user(); // Mendapatkan informasi pengguna yang sedang login
+
+    //     if (!$user) {
+    //         return response()->json(['message' => 'Unauthorized'], 401);
+    //     }
+
+    //     // Memperbarui informasi profil pengguna
+    //     $userToUpdate = User::find($user->id); // Mendapatkan objek User berdasarkan id pengguna
+
+    //     if (!$userToUpdate) {
+    //         return response()->json(['message' => 'User not found'], 404);
+    //     }
+
+    //     // Mengambil data yang divalidasi dari request
+    //     $validatedData = $request->validated();
+
+    //     // Mengelola gambar profil jika ada
+    //     if ($request->hasFile('img_profile')) {
+    //         // Menghapus gambar profil lama jika ada
+    //         if ($userToUpdate->img_profile) {
+    //             // Hapus gambar profil lama dari penyimpanan
+    //             Storage::delete('public/' . $userToUpdate->img_profile);
+    //         }
+
+    //         // Simpan gambar profil baru di direktori 'public/photos'
+    //         $imgProfilePath = $request->file('img_profile')->store('photos', 'public');
+
+    //         // Simpan path relatif dari gambar profil baru ke dalam database
+    //         $validatedData['img_profile'] = $imgProfilePath;
+    //     }
+
+    //     // Lakukan update pada objek user
+    //     $userToUpdate->update($validatedData);
+
+    //     // Mengembalikan respons sukses
+    //     return response()->json(['message' => 'Profile updated successfully', 'user' => $userToUpdate]);
+    // }
+
     public function updateProfile(UsersRequest $request)
     {
-        $user = Auth::user(); // Mendapatkan informasi pengguna yang sedang login
+        $user = Auth::user();
 
         if (!$user) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        // Memperbarui informasi profil pengguna
-        $userToUpdate = User::find($user->id); // Mendapatkan objek User berdasarkan id pengguna
+        $userToUpdate = User::find($user->id);
 
         if (!$userToUpdate) {
             return response()->json(['message' => 'User not found'], 404);
         }
 
-        // Mengambil data yang divalidasi dari request
         $validatedData = $request->validated();
 
-        // Mengelola gambar profil jika ada
         if ($request->hasFile('img_profile')) {
             // Menghapus gambar profil lama jika ada
             if ($userToUpdate->img_profile) {
-                // Hapus gambar profil lama dari penyimpanan
                 Storage::delete('public/' . $userToUpdate->img_profile);
             }
+            $file = $request->file('img_profile');
+            $fileName = $file->getClientOriginalName();
 
-            // Simpan gambar profil baru di direktori 'public/photos'
-            $imgProfilePath = $request->file('img_profile')->store('photos', 'public');
-
-            // Simpan path relatif dari gambar profil baru ke dalam database
+            // Simpan gambar profil baru di direktori 'public/photos' untuk api_usmhub
+            $imgProfilePath = $file->storeAs('photos', $fileName, 'public');
             $validatedData['img_profile'] = $imgProfilePath;
+
+            // Kirim gambar profil baru ke admin_usmhub
+            $response = Http::attach(
+                'img_profile',
+                file_get_contents($file->getRealPath()),
+                $fileName
+            )->post('http://127.0.0.1:8000/api/upload/user');
+
+            if (!$response->successful()) {
+                return response()->json(['message' => 'Failed to upload profile image to API'], 500);
+            }
         }
 
         // Lakukan update pada objek user
@@ -113,6 +161,9 @@ class AuthController extends Controller
         // Mengembalikan respons sukses
         return response()->json(['message' => 'Profile updated successfully', 'user' => $userToUpdate]);
     }
+
+
+
 
     public function updatePassword(Request $request)
     {

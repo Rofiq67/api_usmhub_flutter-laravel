@@ -17,10 +17,10 @@ class UsersRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users,username,' . $this->user()->id,
-            'email' => 'required|string|email|max:255|unique:users,email,' . $this->user()->id,
+            'first_name' => 'nullable|string|max:255',
+            'last_name' => 'nullable|string|max:255',
+            'username' => 'nullable|string|max:255|unique:users,username,' . $this->user()->id,
+            'email' => 'nullable|string|email|max:255|unique:users,email,' . $this->user()->id,
             'img_profile' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'tgl_lahir' => 'nullable|date',
             'progdi' => 'nullable|string|in:Teknik Informatika,Sistem Informasi,Ilmu Komunikasi,Pariwisata',

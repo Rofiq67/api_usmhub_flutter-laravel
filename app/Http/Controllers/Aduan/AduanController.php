@@ -7,6 +7,7 @@ use App\Http\Requests\AduanRequest;
 use App\Models\Aduan;
 use App\Models\HistoryForward;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class AduanController extends Controller
 {
@@ -20,6 +21,41 @@ class AduanController extends Controller
         return response()->json($riwayat, 200);
     }
 
+    // public function createPengaduan(AduanRequest $request)
+    // {
+    //     $user = Auth::user(); // Mendapatkan pengguna yang sedang login
+    //     if (!$user) {
+    //         return response()->json(['message' => 'User not authenticated'], 401);
+    //     }
+
+    //     $photoPath = null;
+    //     if ($request->hasFile('bukti_photo')) {
+    //         $photo = $request->file('bukti_photo');
+    //         $photoPath = $photo->store('photos', 'public');
+    //     }
+
+
+    //     // Ambil nilai is_anonymous dari request, default-nya false jika tidak ada
+    //     $isAnonymous = $request->has('is_anonymous') ? $request->is_anonymous : false;
+
+    //     $pengaduan = Aduan::create([
+    //         'user_id' => $user->id,
+    //         'jenis_pengaduan' => $request->jenis_pengaduan,
+    //         'program_studi' => $request->program_studi,
+    //         'keterangan' => $request->keterangan,
+    //         'rating' => $request->rating,
+    //         'bukti_photo' => $photoPath,
+    //         'status' => 'Belum Dibaca',
+    //         'is_anonymous' => $isAnonymous,
+    //     ]);
+
+    //     return response()->json([
+    //         'message' => 'Pengaduan berhasil dibuat',
+    //         'pengaduan' => $pengaduan,
+    //     ], 201);
+    // }
+
+
     public function createPengaduan(AduanRequest $request)
     {
         $user = Auth::user(); // Mendapatkan pengguna yang sedang login
@@ -27,20 +63,24 @@ class AduanController extends Controller
             return response()->json(['message' => 'User not authenticated'], 401);
         }
 
-        // $photoPath = null;
-        // if ($request->hasFile('bukti_photo')) {
-        //     $photo = $request->file('bukti_photo');
-        //     $photoPath = $photo->store('photos', 'public');
-        //     // $photoPath = $photo->getClientOriginalName(); // Mengambil nama file asli tanpa path
-        //     $photoPath = asset($photoPath); // Mengubahpath menjadi URL
-        //     // $photoPath = asset('storage/' . $photoPath);
-        // }
         $photoPath = null;
         if ($request->hasFile('bukti_photo')) {
-            $photo = $request->file('bukti_photo');
-            $photoPath = $photo->store('photos', 'public');
-        }
+            // Save file to api_usmhub
+            $photoPath = $request->file('bukti_photo')->storeAs('photos', $request->file('bukti_photo')->getClientOriginalName(), 'public');
 
+            // Save file to admin_usmhub
+            $response = Http::attach(
+                'bukti_photo',
+                file_get_contents($request->file('bukti_photo')->getRealPath()),
+                $request->file('bukti_photo')->getClientOriginalName()
+            )->post('http://127.0.0.1:8000/api/upload/aduan'); // Replace with your local server address
+
+            if ($response->successful()) {
+                // Optionally handle response or errors from API
+            } else {
+                return redirect()->back()->with('error', 'Failed to upload file to Admin');
+            }
+        }
 
         // Ambil nilai is_anonymous dari request, default-nya false jika tidak ada
         $isAnonymous = $request->has('is_anonymous') ? $request->is_anonymous : false;
@@ -61,7 +101,6 @@ class AduanController extends Controller
             'pengaduan' => $pengaduan,
         ], 201);
     }
-
 
     public function getHistoryForward($id)
     {

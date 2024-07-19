@@ -8,6 +8,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Feed\FeedController;
 use App\Http\Controllers\GetFile\GetFileController;
 use App\Http\Controllers\Komentar\KomentarController as KomentarController;
+use App\Http\Controllers\Upload\UploadFileController;
 use App\Http\Controllers\User\UserController;
 use App\Models\Feed;
 use Illuminate\Support\Facades\Route;
@@ -27,7 +28,8 @@ Route::post('/loginApi', [AuthController::class, 'loginApi'])->name('loginApi');
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/forgot-password', [AuthController::class, 'forgotPass']);
 
-
+Route::post('/upload/komentar', [UploadFileController::class, 'uploadKomentar'])->name('uploadKomentar');
+Route::post('/upload/feed', [UploadFileController::class, 'uploadFeed'])->name('uploadFeed');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']); // Rute untuk proses logout user mobile
@@ -43,9 +45,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/pengaduan/{id}/forward', [AduanController::class, 'getHistoryForward'])->name('pengaduan.forward');
 
     //comment
-    // Route::get('/komentar', [KomentarController::class, 'index']);
     Route::post('/komentar/{aduan_id}/kirim', [KomentarController::class, 'kirimKomentar'])->name('komentar.kirim');
-    // Route::put('/komentar/{id}/update', [KomentarController::class, 'updateKomentar'])->name('komentar.update');
     Route::post('/komentar/{id}/update', [KomentarController::class, 'updateKomentar'])->name('komentar.update');
     Route::delete('/komentar/{id}/delete', [KomentarController::class, 'destroy'])->name('komentar.destroy');
     Route::get('/komentar/{id}', [KomentarController::class, 'getKomentar'])->name('getKomentar');

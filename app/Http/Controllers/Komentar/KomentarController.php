@@ -9,6 +9,7 @@ use App\Models\Aduan;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
 
 class KomentarController extends Controller
 {
@@ -22,8 +23,7 @@ class KomentarController extends Controller
         ], 200);
     }
 
-
-    public function kirimKomentar(Request $request, $aduan_id)
+    public function kirimKomentar(Request $request)
     {
         $request->validate([
             'aduan_id' => 'required|exists:aduans,id',
@@ -33,7 +33,21 @@ class KomentarController extends Controller
 
         $file = null;
         if ($request->hasFile('file')) {
-            $file = $request->file('file')->store('file_komentar', 'public');
+            // Save file to api_usmhub
+            $file = $request->file('file')->storeAs('file_komentar', $request->file('file')->getClientOriginalName(), 'public');
+
+            // Save file to admin_usmhub
+            $response = Http::attach(
+                'file',
+                file_get_contents($request->file('file')->getRealPath()),
+                $request->file('file')->getClientOriginalName()
+            )->post('http://127.0.0.1:8000/api/upload/komentar'); // Replace with your local server address
+
+            if ($response->successful()) {
+                // Optionally handle response or errors from API
+            } else {
+                return redirect()->back()->with('error', 'Failed to upload file to Admin');
+            }
         }
 
         $komentar = Komentar::create([
@@ -45,6 +59,29 @@ class KomentarController extends Controller
 
         return response()->json(['message' => 'Komentar berhasil dikirim', 'komentar' => $komentar], 201);
     }
+
+    // public function kirimKomentar(Request $request, $aduan_id)
+    // {
+    //     $request->validate([
+    //         'aduan_id' => 'required|exists:aduans,id',
+    //         'text' => 'nullable|string',
+    //         'file' => 'nullable|file|mimes:jpg,png,pdf,doc,docx|max:2048',
+    //     ]);
+
+    //     $file = null;
+    //     if ($request->hasFile('file')) {
+    //         $file = $request->file('file')->store('file_komentar', 'public');
+    //     }
+
+    //     $komentar = Komentar::create([
+    //         'aduan_id' => $request->aduan_id,
+    //         'user_id' => Auth::id(),
+    //         'text' => $request->text,
+    //         'file' => $file,
+    //     ]);
+
+    //     return response()->json(['message' => 'Komentar berhasil dikirim', 'komentar' => $komentar], 201);
+    // }
 
     public function updateKomentar(Request $request, $id)
     {
@@ -74,6 +111,26 @@ class KomentarController extends Controller
             $komentar->file = $file;
         }
 
+        if ($request->hasFile('file')) {
+            // Save file to api_usmhub
+            $file = $request->file('file')->storeAs('file_komentar', $request->file('file')->getClientOriginalName(), 'public');
+
+            // Save file to admin_usmhub
+            $response = Http::attach(
+                'file',
+                file_get_contents($request->file('file')->getRealPath()),
+                $request->file('file')->getClientOriginalName()
+            )->post('http://127.0.0.1:8000/api/upload/komentar'); // Replace with your local server address
+
+            if (!$response->successful()) {
+                return redirect()->back()->with('error', 'Failed to upload file to Admin');
+            }
+
+            if ($komentar->file) {
+                Storage::disk('public')->delete($komentar->file);
+            }
+            $komentar->file = $file;
+        }
         $komentar->save();
 
         return response()->json(['message' => 'Komentar berhasil diperbarui', 'komentar' => $komentar], 200);

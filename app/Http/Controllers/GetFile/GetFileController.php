@@ -53,15 +53,19 @@ class GetFileController extends Controller
 
     public function getFileKomentar($filekomentar)
     {
-        $pathKomentar = 'public/file_komentar/' . $filekomentar;
+        $pathAdminUsmhub = 'public/admin_usmhub/file_komentar/' . $filekomentar;
+        $pathApiUsmhub = 'public/file_komentar/' . $filekomentar;
 
         try {
-            if (!Storage::exists($pathKomentar)) {
+            if (Storage::exists($pathAdminUsmhub)) {
+                $file = Storage::get($pathAdminUsmhub);
+            } elseif (Storage::exists($pathApiUsmhub)) {
+                $file = Storage::get($pathApiUsmhub);
+            } else {
                 abort(404);
             }
 
-            $file = Storage::get($pathKomentar);
-            $type = Storage::mimeType($pathKomentar);
+            $type = Storage::mimeType($pathAdminUsmhub); // Using admin_usmhub path for consistency
 
             return response($file, 200)->header('Content-Type', $type);
         } catch (\Exception $e) {
